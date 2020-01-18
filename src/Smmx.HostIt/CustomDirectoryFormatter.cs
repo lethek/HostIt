@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.FileProviders;
+using NaturalSort.Extension;
 
 
 namespace Smmx.HostIt
@@ -69,7 +70,7 @@ namespace Smmx.HostIt
                 HtmlEncode(Resources.HtmlDir_Modified),
                 HtmlEncode(Resources.HtmlDir_LastModified)
             );
-            foreach (var fileInfo in contents.Where(info => info.IsDirectory)) {
+            foreach (var fileInfo in contents.Where(info => info.IsDirectory).OrderBy(x => x.Name, StringComparer.InvariantCultureIgnoreCase.WithNaturalSort())) {
                 try {
                     stringBuilder.AppendFormat(
                         "\r\n      <tr class=\"directory\">\r\n        <td class=\"name\"><a href=\"./{0}/\">{0}/</a></td>\r\n        <td></td>\r\n        <td class=\"modified\">{1}</td>\r\n      </tr>",
@@ -79,7 +80,7 @@ namespace Smmx.HostIt
                 } catch (DirectoryNotFoundException) { } catch (FileNotFoundException) { }
             }
 
-            foreach (var fileInfo in contents.Where(info => !info.IsDirectory)) {
+            foreach (var fileInfo in contents.Where(info => !info.IsDirectory).OrderBy(x => x.Name, StringComparer.InvariantCultureIgnoreCase.WithNaturalSort())) {
                 try {
                     stringBuilder.AppendFormat(
                         "\r\n      <tr class=\"file\">\r\n        <td class=\"name\"><a href=\"./{0}\">{0}</a></td>\r\n        <td class=\"length\">{1}</td>\r\n        <td class=\"modified\">{2}</td>\r\n      </tr>",
